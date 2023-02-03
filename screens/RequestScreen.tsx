@@ -1,7 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Divider, Text } from 'react-native-paper';
 
 import { RootStackParamList } from '../App';
 import ImageUri from '../components/ImageUri';
@@ -12,8 +12,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Request'>;
 
 export default function RequestScreen({ route }: Props) {
   const { selectedAccount } = useAuthorization();
-
-  const [isLoading, setIsLoading] = useState(false);
 
   // GET response
   const [label, setLabel] = useState<string | undefined>(undefined);
@@ -112,21 +110,26 @@ export default function RequestScreen({ route }: Props) {
 
   return (
     <>
-      <ScrollView>
-        <Text variant="bodySmall">API URL: {apiUrl}</Text>
+      <ScrollView style={styles.container}>
+        {/* <Text variant="bodySmall">API URL: {apiUrl}</Text>
         <Text variant="bodySmall">
           Connected wallet: {selectedAccount?.publicKey.toBase58()}
-        </Text>
+        </Text> */}
 
-        <View>
+        <View style={styles.labelIcon}>
           {label ? (
-            <Text variant="displayLarge">{label}</Text>
+            <Text variant="titleLarge">{label}</Text>
           ) : (
             <Text>Loading...</Text>
           )}
-          {icon && <ImageUri uri={icon} height={100} width={100} />}
+          {icon && <ImageUri uri={icon} height={200} width={200} />}
         </View>
+
+        <Divider style={styles.spacer} />
+
         {message && <Text>{message}</Text>}
+
+        <Divider style={styles.spacer} />
 
         {toSign && canSign && (
           <SignMessageButton message={toSign} onSigned={setSignature}>
@@ -134,8 +137,23 @@ export default function RequestScreen({ route }: Props) {
           </SignMessageButton>
         )}
 
-        <Text>Is Complete? {isComplete.toString()}</Text>
+        <Text>{isComplete ? '✅' : '⏳'}</Text>
       </ScrollView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    minHeight: '90%',
+  },
+  labelIcon: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  spacer: {
+    marginVertical: 16,
+    width: '100%',
+  },
+});

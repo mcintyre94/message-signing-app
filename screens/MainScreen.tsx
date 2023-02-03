@@ -1,20 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import {
-  Appbar,
-  Button,
-  Divider,
-  Portal,
-  Text,
-  TextInput,
-} from 'react-native-paper';
+import { Appbar, Button, Portal, Text } from 'react-native-paper';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { BarcodeFormat, useScanBarcodes } from 'vision-camera-code-scanner';
 
 import { RootStackParamList } from '../App';
 import AccountInfo from '../components/AccountInfo';
-import RecordMessageButton from '../components/RecordMessageButton';
 import SignMessageButton from '../components/SignMessageButton';
 import useAuthorization from '../utils/useAuthorization';
 
@@ -22,7 +14,6 @@ export default function MainScreen({
   navigation,
 }: NativeStackScreenProps<RootStackParamList>) {
   const { accounts, onChangeAccount, selectedAccount } = useAuthorization();
-  const [memoText, setMemoText] = useState('');
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const devices = useCameraDevices();
@@ -82,32 +73,15 @@ export default function MainScreen({
                 frameProcessor={frameProcessor}
                 frameProcessorFps={5}
               />
-              <Button style={styles.top} onPress={() => setShowCamera(false)}>Close</Button>
-              {barcodes.map((barcode, idx) => (
-                <Text key={idx} style={styles.barcodeTextURL}>
-                  {barcode.displayValue}
-                </Text>
-              ))}
+              <Button style={styles.top} onPress={() => setShowCamera(false)}>
+                Close
+              </Button>
             </>
-          ) : null}
-          <Text variant="bodyLarge">
-            Write a message to record on the blockchain.
-          </Text>
-          <Divider style={styles.spacer} />
-          <TextInput
-            label="What's on your mind?"
-            onChangeText={text => {
-              setMemoText(text);
-            }}
-            style={styles.textInput}
-            value={memoText}
-          />
-          <Divider style={styles.spacer} />
-          <RecordMessageButton message={memoText}>
-            Record Message
-          </RecordMessageButton>
-          <Divider style={styles.spacer} />
-          <SignMessageButton message={memoText}>Sign Message</SignMessageButton>
+          ) : (
+            <SignMessageButton message={'just connecting :)'}>
+              Connect wallet
+            </SignMessageButton>
+          )}
         </ScrollView>
         {accounts && selectedAccount ? (
           <AccountInfo
@@ -124,6 +98,7 @@ export default function MainScreen({
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    minHeight: '90%',
   },
   shell: {
     height: '100%',
