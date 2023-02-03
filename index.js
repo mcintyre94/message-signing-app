@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 import 'localstorage-polyfill'; // FIXME: Remove this after https://github.com/solana-labs/wallet-adapter/issues/465 is complete
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
+global.Buffer = require('buffer').Buffer;
 
 import { AppRegistry } from 'react-native';
 import App from './App';

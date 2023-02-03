@@ -1,3 +1,4 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import {
@@ -11,12 +12,15 @@ import {
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { BarcodeFormat, useScanBarcodes } from 'vision-camera-code-scanner';
 
+import { RootStackParamList } from '../App';
 import AccountInfo from '../components/AccountInfo';
 import RecordMessageButton from '../components/RecordMessageButton';
 import SignMessageButton from '../components/SignMessageButton';
 import useAuthorization from '../utils/useAuthorization';
 
-export default function MainScreen() {
+export default function MainScreen({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList>) {
   const { accounts, onChangeAccount, selectedAccount } = useAuthorization();
   const [memoText, setMemoText] = useState('');
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
@@ -40,6 +44,15 @@ export default function MainScreen() {
     const status = await Camera.requestCameraPermission();
     setHasCameraPermission(status === 'authorized');
   }
+
+  useEffect(() => {
+    const barcode = barcodes.find(b => b.displayValue !== undefined);
+    if (!barcode) {
+      return;
+    }
+
+    navigation.navigate('Request', { url: barcode.displayValue as string });
+  }, [barcodes, navigation]);
 
   return (
     <>

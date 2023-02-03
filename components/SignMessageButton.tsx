@@ -1,7 +1,7 @@
-import {transact} from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
-import {fromUint8Array} from 'js-base64';
-import React, {useContext, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
+import { fromUint8Array } from 'js-base64';
+import React, { useContext, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import {
   Button,
   Dialog,
@@ -13,15 +13,16 @@ import {
 
 import useAuthorization from '../utils/useAuthorization';
 import useGuardedCallback from '../utils/useGuardedCallback';
-import {SnackbarContext} from './SnackbarProvider';
+import { SnackbarContext } from './SnackbarProvider';
 
 type Props = Readonly<{
   children?: React.ReactNode;
   message: string;
+  onSigned?: (signature: Uint8Array) => void;
 }>;
 
-export default function SignMessageButton({children, message}: Props) {
-  const {authorizeSession, selectedAccount} = useAuthorization();
+export default function SignMessageButton({ children, message, onSigned }: Props) {
+  const { authorizeSession, selectedAccount } = useAuthorization();
   const [previewSignature, setPreviewSignature] = useState<Uint8Array | null>(
     null,
   );
@@ -58,16 +59,20 @@ export default function SignMessageButton({children, message}: Props) {
             );
             const signature = await signMessageGuarded(messageBuffer);
             if (signature) {
-              setSnackbarProps({
-                action: {
-                  label: 'View Signature',
-                  onPress() {
-                    setPreviewSignature(signature!);
-                    setPreviewSignatureDialogOpen(true);
+              if (onSigned) {
+                onSigned(signature);
+              } else {
+                setSnackbarProps({
+                  action: {
+                    label: 'View Signature',
+                    onPress() {
+                      setPreviewSignature(signature!);
+                      setPreviewSignatureDialogOpen(true);
+                    },
                   },
-                },
-                children: 'Message signed',
-              });
+                  children: 'Message signed',
+                });
+              }
             }
           }}
           mode="outlined"
