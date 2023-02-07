@@ -1,15 +1,18 @@
-# Example React Native dApp
+# Message Signing App
 
-This demonstrates how you can use the mobile wallet adapter protocol in a React Native app.
+This is a React Native app using [Mobile Wallet Adapter (MWA)](https://github.com/solana-mobile/mobile-wallet-adapter) to demonstrate the proposed [Solana Pay message signing specification](https://github.com/solana-labs/solana-pay/blob/master/message-signing-spec.md)
 
-https://user-images.githubusercontent.com/13243/180274812-9cff2bdf-01d2-44fe-b094-52d3f9b22c4e.mp4
+Note that only Android is currently supported
+
+## Demo
+
+https://user-images.githubusercontent.com/1711350/217323682-cb1e897a-90f9-41d0-b0cc-44271032050e.mp4
 
 ## Features
 
--   Authorize the web app for use with a native mobile wallet app.
--   Record a message of your choosing on-chain, using the Memo program.
--   Sign a message of your choosing.
--   Request an airdrop of SOL on devnet.
+- Scan a message signing QR code. You can generate these using [the signing prototype dapp](https://github.com/mcintyre94/signing-prototype-dapp)
+- Perform the API requests described in the spec
+- Use MWA to sign the message using any installed wallet
 
 ## Prerequisites
 
@@ -22,7 +25,3 @@ https://user-images.githubusercontent.com/13243/180274812-9cff2bdf-01d2-44fe-b09
 
 1. Install dependencies and build the client libraries locally with `yarn`.
 2. Start the React Native packager, build the application, and start the simulator with `yarn android`.
-
-## Development
-
-After making changes to any of the client libraries in `js/packages/` you will need to re-run `yarn` in this directory. This will rebuild the client libraries and copy their build artifacts into the `node_modules/` folder of this example app.
